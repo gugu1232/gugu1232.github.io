@@ -11,7 +11,7 @@
         
         * {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-        } <--!字体设置-->
+        } 
         
         .screen {
             position: fixed;
@@ -20,11 +20,11 @@
             width: 100%;
             height: 100%;
             z-index: 10;
-        } //窗口设置，全屏覆盖
+        } 
         
         .screen.hidden {
             display: none !important;
-        } //如果 .screen 元素有类名 hidden，就完全隐藏它。!important 表示这个规则的优先级最高。
+        } 
         
         .fade-in {
             animation: fadeIn 0.5s ease-in-out;
@@ -33,20 +33,20 @@
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
-        } //动画效果
+        } 
         
         .slide-up {
             animation: slideUp 0.3s ease-out;
-        } //向上划入的动画
+        } 
         
         @keyframes slideUp {
             from { transform: translateY(100%); opacity: 0; }
             to { transform: translateY(0); opacity: 1; }
-        }  //底部弹出动画
+        }  
         
         .progress-bar {
             transition: width 0.5s ease-in-out;
-        } //当 .progress-bar 的 width 发生变化时，会在 0.5 秒内平滑过渡
+        } 
         
         .card-hover {
             transition: all 0.3s ease;
@@ -55,7 +55,7 @@
         .card-hover:hover {
             transform: translateY(-4px);
             box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-        }  悬停动画
+        }  
         
         .btn-primary {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -77,7 +77,7 @@
             top: 50%;
             transform: translateY(-50%) translateX(-50%);
             transition: none;
-        }//创建一个“纯 CSS 的三角形”。（三角形图标）
+        }
         
         .judgment-bar {
             height: 40px;
@@ -86,7 +86,7 @@
             overflow: hidden;
             cursor: pointer;
             background: #374151;
-        } //判断条容器
+        } 
         
         .judgment-success {
             background: linear-gradient(90deg, #ec4899 0%, #f97316 100%);
@@ -94,19 +94,19 @@
             top: 0;
             height: 100%;
             z-index: 2;
-        }  //成功进度条
+        }  
         
         .judgment-fail {
             background: #374151;
             z-index: 1;
-        } //失败背景条
+        } 
         
         .message-log {
             max-height: 200px;
             overflow-y: auto;
-        } //消息记录滚动框
+        } 
         
-        .dark .bg-white { background-color: #1f2937; } //让网站根据系统或用户选择切换深浅模式。（深夜模式）
+        .dark .bg-white { background-color: #1f2937; } 
         .dark .text-gray-900 { color: #f9fafb; }
         .dark .text-gray-600 { color: #9ca3af; }
         .dark .text-gray-700 { color: #d1d5db; }
@@ -122,12 +122,12 @@
             <div class="bg-white rounded-3xl p-8 max-w-sm w-full text-center shadow-2xl card-hover">
                 <div class="mb-8">
                     <div class="w-32 h-32 mx-auto bg-gradient-to-br from-pink-200 to-pink-400 rounded-2xl flex items-center justify-center mb-6">
-                        <i class="fas fa-envelope text-white text-4xl"></i> <--!信封图标-->
+                        <i class="fas fa-envelope text-white text-4xl"></i> 
                     </div>
                     <h1 class="text-3xl font-bold text-gray-900 mb-2">Offer</h1>
                     <p class="text-gray-600">您收到了一份工作邀请</p>
-                    <p class="text-sm-gray-600">您将以实习向导的身份进入白塔工作</p>
-                    <p class="text-sm-gray-600">白塔感谢您为人类作出的伟大贡献！</p>
+                    <p class="text-gray-600-sm">您将以实习向导的身份进入白塔工作</p>
+                    <p class="text-sm-gray-600-xs">白塔感谢您为人类作出的伟大贡献！</p>
                 </div>
                 <button onclick="acceptOffer()" class="btn-primary text-white px-8 py-4 rounded-2xl font-semibold w-full">
                     <i class="fas fa-check mr-2"></i>接受 Offer
