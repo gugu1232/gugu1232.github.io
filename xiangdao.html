@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>心理辅导员</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        * {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+        
+        .screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 10;
+        }
+        
+        .screen.hidden {
+            display: none !important;
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .slide-up {
+            animation: slideUp 0.3s ease-out;
+        }
+        
+        @keyframes slideUp {
+            from { transform: translateY(100%); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        .progress-bar {
+            transition: width 0.5s ease-in-out;
+        }
+        
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+        
+        .game-triangle {
+            width: 0;
+            height: 0;
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            border-bottom: 16px solid #ef4444;
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%) translateX(-50%);
+            transition: none;
+        }
+        
+        .judgment-bar {
+            height: 40px;
+            border-radius: 20px;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            background: #374151;
+        }
+        
+        .judgment-success {
+            background: linear-gradient(90deg, #ec4899 0%, #f97316 100%);
+            position: absolute;
+            top: 0;
+            height: 100%;
+            z-index: 2;
+        }
+        
+        .judgment-fail {
+            background: #374151;
+            z-index: 1;
+        }
+        
+        .message-log {
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        
+        .dark .bg-white { background-color: #1f2937; }
+        .dark .text-gray-900 { color: #f9fafb; }
+        .dark .text-gray-600 { color: #9ca3af; }
+        .dark .text-gray-700 { color: #d1d5db; }
+        .dark .border-gray-200 { border-color: #374151; }
+        .dark .bg-gray-50 { background-color: #111827; }
+        .dark .bg-gray-100 { background-color: #1f2937; }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen transition-colors duration-300">
+    <!-- 界面1: Offer接受页面 -->
+    <div id="screen1" class="screen fade-in">
+        <div class="min-h-screen flex items-center justify-center p-4">
+            <div class="bg-white rounded-3xl p-8 max-w-sm w-full text-center shadow-2xl card-hover">
+                <div class="mb-8">
+                    <div class="w-32 h-32 mx-auto bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center mb-6">
+                        <i class="fas fa-envelope text-white text-4xl"></i>
+                    </div>
+                    <h1 class="text-3xl font-bold text-gray-900 mb-2">Offer</h1>
+                    <p class="text-gray-600">您收到了一份工作邀请</p>
+                </div>
+                <button onclick="acceptOffer()" class="btn-primary text-white px-8 py-4 rounded-2xl font-semibold w-full">
+                    <i class="fas fa-check mr-2"></i>接受 Offer
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 界面2: 入职填写页面 -->
+    <div id="screen2" class="screen hidden">
+        <div class="min-h-screen flex items-center justify-center p-4">
+            <div class="bg-white rounded-3xl p-8 max-w-md w-full shadow-2xl">
+                <h2 class="text-2xl font-bold text-gray-900 mb-8 text-center">入职填写</h2>
+                
+                <div class="space-y-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">您的姓名</label>
+                        <input type="text" id="userName" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="请输入您的姓名">
+                    </div>
+                    
+                    <div class="bg-gray-50 p-4 rounded-xl">
+                        <h3 class="font-semibold text-gray-900 mb-2">履历</h3>
+                        <p class="text-gray-600 text-sm">在国立向导中心完成了所有培训课程并获得毕业证书</p>
+                    </div>
+                </div>
+                
+                <button onclick="submitForm()" class="btn-primary text-white px-8 py-4 rounded-2xl font-semibold w-full mt-8">
+                    <i class="fas fa-paper-plane mr-2"></i>提交
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 界面3: 主界面 -->
+    <div id="screen3" class="screen hidden">
+        <div class="min-h-screen bg-gray-50 pb-4">
+            <!-- 顶部信息栏 -->
+            <div class="bg-white shadow-sm p-4 flex justify-between items-center">
+                <div class="font-semibold text-gray-900" id="playerName">向导员</div>
+                <div class="text-gray-600" id="currentDate"></div>
+            </div>
+            
+            <!-- 状态面板 -->
+            <div class="p-4 space-y-4">
+                <div class="bg-white rounded-2xl p-6 shadow-sm">
+                    <div class="grid grid-cols-3 gap-4 mb-4">
+                        <div>
+                            <div class="flex items-center mb-2">
+                                <i class="fas fa-utensils text-orange-500 mr-2"></i>
+                                <span class="text-sm font-medium">饱腹度</span>
+                            </div>
+                            <div class="bg-gray-200 rounded-full h-2">
+                                <div class="bg-orange-500 h-2 rounded-full progress-bar" style="width: 80%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex items-center mb-2">
+                                <i class="fas fa-brain text-blue-500 mr-2"></i>
+                                <span class="text-sm font-medium">精神力</span>
+                            </div>
+                            <div class="bg-gray-200 rounded-full h-2">
+                                <div class="bg-blue-500 h-2 rounded-full progress-bar" style="width: 75%" id="mentalPowerBar"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex items-center mb-2">
+                                <i class="fas fa-tint text-cyan-500 mr-2"></i>
+                                <span class="text-sm font-medium">水分</span>
+                            </div>
+                            <div class="bg-gray-200 rounded-full h-2">
+                                <div class="bg-cyan-500 h-2 rounded-full progress-bar" style="width: 90%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="flex justify-between items-center">
+                        <div class="flex items-center">
+                            <i class="fas fa-star text-yellow-500 mr-2"></i>
+                            <span class="text-sm">等级 1</span>
+                            <div class="ml-3 bg-gray-200 rounded-full h-2 w-20">
+                                <div class="bg-yellow-500 h-2 rounded-full progress-bar" style="width: 30%"></div>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-sm text-gray-600">疏导报酬</div>
+                            <div class="font-semibold text-purple-600">积分: 0</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 可疏导人选 -->
+                <div class="bg-white rounded-2xl p-6 shadow-sm">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">可疏导人选</h3>
+                    <div class="space-y-3" id="characterList">
+                        <!-- 角色卡片将通过JS生成 -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 界面4: 辅导界面 -->
+    <div id="screen4" class="screen hidden">
+        <div class="min-h-screen bg-gray-50">
+            <!-- 角色信息 -->
+            <div class="bg-white p-4 shadow-sm">
+                <div id="characterInfo" class="text-center">
+                    <h3 class="text-lg font-semibold text-gray-900" id="charName">犬系基因</h3>
+                    <p class="text-gray-600" id="charDetails">级别：D 污染度：75%</p>
+                </div>
+            </div>
+            
+            <!-- 进度条面板 -->
+            <div class="p-4">
+                <div class="bg-white rounded-2xl p-6 shadow-sm space-y-4">
+                    <div>
+                        <div class="flex justify-between mb-2">
+                            <span class="text-sm font-medium">污染值</span>
+                            <span class="text-sm text-red-600" id="pollutionValue">75%</span>
+                        </div>
+                        <div class="bg-gray-200 rounded-full h-3">
+                            <div class="bg-red-500 h-3 rounded-full progress-bar" id="pollutionBar" style="width: 75%"></div>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <div class="flex justify-between mb-2">
+                            <span class="text-sm font-medium">舒服度</span>
+                            <span class="text-sm text-green-600" id="comfortValue">25%</span>
+                        </div>
+                        <div class="bg-gray-200 rounded-full h-3">
+                            <div class="bg-green-500 h-3 rounded-full progress-bar" id="comfortBar" style="width: 25%"></div>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <div class="flex justify-between mb-2">
+                            <span class="text-sm font-medium">失控值</span>
+                            <span class="text-sm text-orange-600" id="lossControlValue">80%</span>
+                        </div>
+                        <div class="bg-gray-200 rounded-full h-3">
+                            <div class="bg-orange-500 h-3 rounded-full progress-bar" id="lossControlBar" style="width: 80%"></div>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <div class="flex justify-between mb-2">
+                            <span class="text-sm font-medium">向导精神力</span>
+                            <span class="text-sm text-blue-600" id="guideMentalValue">75%</span>
+                        </div>
+                        <div class="bg-gray-200 rounded-full h-3">
+                            <div class="bg-blue-500 h-3 rounded-full progress-bar" id="guideMentalBar" style="width: 75%"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 操作按钮 -->
+                <div class="grid grid-cols-3 gap-3 mt-4">
+                    <button onclick="showComfortOptions()" class="bg-green-500 text-white py-3 px-4 rounded-xl font-medium card-hover">
+                        <i class="fas fa-heart mr-2"></i>安抚
+                    </button>
+                    <button onclick="showPurifyOptions()" class="bg-purple-500 text-white py-3 px-4 rounded-xl font-medium card-hover">
+                        <i class="fas fa-magic mr-2"></i>净化
+                    </button>
+                    <button onclick="endCounseling()" class="bg-gray-500 text-white py-3 px-4 rounded-xl font-medium card-hover">
+                        <i class="fas fa-stop mr-2"></i>结束疏导
+                    </button>
+                </div>
+                
+                <!-- 消息记录 -->
+                <div class="bg-white rounded-2xl p-4 mt-4 shadow-sm">
+                    <h4 class="font-semibold text-gray-900 mb-3">操作记录</h4>
+                    <div class="message-log space-y-2" id="messageLog">
+                        <p class="text-sm text-gray-600">开始心理辅导...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 模态框 - 只在第四个界面中显示 -->
+        <div id="modal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-4">
+            <div class="bg-white rounded-2xl p-6 max-w-sm w-full slide-up" id="modalContent">
+                <!-- 内容将通过JS填充 -->
+            </div>
+        </div>
+
+        <!-- 判定游戏模态框 - 只在第四个界面中显示 -->
+        <div id="gameModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-4">
+            <div class="bg-white rounded-2xl p-6 max-w-sm w-full slide-up">
+                <h3 class="text-lg font-semibold mb-4 text-center">判定挑战</h3>
+                <p class="text-sm text-gray-600 mb-4 text-center">点击屏幕，让三角形落在粉色区域内！</p>
+                <div class="judgment-bar mb-4" id="judgmentBar">
+                    <div class="judgment-success h-full" id="successZone"></div>
+                    <div class="judgment-fail h-full absolute top-0 left-0 w-full"></div>
+                    <div class="game-triangle" id="gameTriangle"></div>
+                </div>
+                <button onclick="performJudgment()" class="btn-primary text-white py-3 px-6 rounded-xl w-full font-medium">
+                    点击判定
+                </button>
+            </div>
+        </div>
+    </div>
+
+
+
+    <script>
+        // 游戏状态
+        let gameState = {
+            playerName: '',
+            currentCharacter: null,
+            characters: [
+                { name: '犬系基因', type: 'dog', level: 'D', pollution: Math.floor(Math.random() * 50) + 50 },
+                { name: '猫系基因', type: 'cat', level: 'D', pollution: Math.floor(Math.random() * 50) + 50 },
+                { name: '鼠系基因', type: 'mouse', level: 'D', pollution: Math.floor(Math.random() * 50) + 50 }
+            ],
+            counselingData: {
+                pollution: 0,
+                comfort: 0,
+                lossControl: 0,
+                guideMental: 75
+            },
+            messageLog: [],
+            trianglePosition: 0,
+            triangleDirection: 1,
+            triangleSpeed: 2,
+            gameInterval: null,
+            currentAction: null
+        };
+
+        // 初始化
+        function init() {
+            updateDate();
+            generateCharacterCards();
+        }
+
+        // 更新日期
+        function updateDate() {
+            const now = new Date();
+            const dateStr = now.toLocaleDateString('zh-CN', { 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            });
+            document.getElementById('currentDate').textContent = dateStr;
+        }
+
+        // 生成角色卡片
+        function generateCharacterCards() {
+            const container = document.getElementById('characterList');
+            container.innerHTML = '';
+            
+            gameState.characters.forEach((char, index) => {
+                const card = document.createElement('div');
+                card.className = 'bg-gradient-to-r from-blue-50 to-purple-50 p-4 rounded-xl border border-gray-200 card-hover cursor-pointer';
+                card.onclick = () => selectCharacter(index);
+                
+                const icon = char.type === 'dog' ? 'fa-dog' : char.type === 'cat' ? 'fa-cat' : 'fa-mouse';
+                
+                card.innerHTML = `
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center">
+                            <i class="fas ${icon} text-2xl text-purple-600 mr-3"></i>
+                            <div>
+                                <h4 class="font-semibold text-gray-900">${char.name}</h4>
+                                <p class="text-sm text-gray-600">级别：${char.level} | 污染度：${char.pollution}%</p>
+                            </div>
+                        </div>
+                        <i class="fas fa-chevron-right text-gray-400"></i>
+                    </div>
+                `;
+                
+                container.appendChild(card);
+            });
+        }
+
+        // 界面切换
+        function showScreen(screenId) {
+            // 隐藏所有界面
+            document.querySelectorAll('.screen').forEach(screen => {
+                screen.classList.add('hidden');
+                screen.classList.remove('fade-in');
+            });
+            
+            // 显示目标界面
+            const targetScreen = document.getElementById(screenId);
+            targetScreen.classList.remove('hidden');
+            
+            // 添加淡入动画
+            setTimeout(() => {
+                targetScreen.classList.add('fade-in');
+            }, 10);
+        }
+
+        // 页面加载时初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            // 确保只显示第一个界面
+            showScreen('screen1');
+            init();
+        });
+
+        // 接受offer
+        function acceptOffer() {
+            showScreen('screen2');
+        }
+
+        // 提交表单
+        function submitForm() {
+            const name = document.getElementById('userName').value.trim();
+            if (!name) {
+                alert('请输入您的姓名');
+                return;
+            }
+            gameState.playerName = name;
+            document.getElementById('playerName').textContent = name;
+            showScreen('screen3');
+        }
+
+        // 选择角色
+        function selectCharacter(index) {
+            gameState.currentCharacter = gameState.characters[index];
+            initializeCounseling();
+            showScreen('screen4');
+        }
+
+        // 初始化辅导数据
+        function initializeCounseling() {
+            const char = gameState.currentCharacter;
+            gameState.counselingData = {
+                pollution: char.pollution,
+                comfort: Math.floor(Math.random() * 31) + 10, // 10-40%
+                lossControl: Math.floor(Math.random() * 40) + 60, // 60-99%
+                guideMental: 75
+            };
+            
+            gameState.messageLog = ['开始心理辅导...'];
+            
+            updateCharacterInfo();
+            updateProgressBars();
+            updateMessageLog();
+        }
+
+        // 更新角色信息
+        function updateCharacterInfo() {
+            const char = gameState.currentCharacter;
+            document.getElementById('charName').textContent = char.name;
+            document.getElementById('charDetails').textContent = `级别：${char.level} 污染度：${char.pollution}%`;
+        }
+
+        // 更新进度条
+        function updateProgressBars() {
+            const data = gameState.counselingData;
+            
+            document.getElementById('pollutionValue').textContent = `${data.pollution}%`;
+            document.getElementById('pollutionBar').style.width = `${data.pollution}%`;
+            
+            document.getElementById('comfortValue').textContent = `${data.comfort}%`;
+            document.getElementById('comfortBar').style.width = `${data.comfort}%`;
+            
+            document.getElementById('lossControlValue').textContent = `${data.lossControl}%`;
+            document.getElementById('lossControlBar').style.width = `${data.lossControl}%`;
+            
+            document.getElementById('guideMentalValue').textContent = `${data.guideMental}%`;
+            document.getElementById('guideMentalBar').style.width = `${data.guideMental}%`;
+        }
+
+        // 更新消息记录
+        function updateMessageLog() {
+            const log = document.getElementById('messageLog');
+            log.innerHTML = '';
+            gameState.messageLog.forEach(message => {
+                const p = document.createElement('p');
+                p.className = 'text-sm text-gray-600 border-l-2 border-blue-200 pl-3 py-1';
+                p.textContent = message;
+                log.appendChild(p);
+            });
+            log.scrollTop = log.scrollHeight;
+        }
+
+        // 显示安抚选项
+        function showComfortOptions() {
+            showModal('安抚选择', `
+                <div class="space-y-3">
+                    <button onclick="performComfort('pat')" class="w-full bg-blue-500 text-white py-3 px-4 rounded-lg font-medium">
+                        <i class="fas fa-hand-paper mr-2"></i>摸头
+                    </button>
+                    <button onclick="performComfort('hug')" class="w-full bg-green-500 text-white py-3 px-4 rounded-lg font-medium">
+                        <i class="fas fa-heart mr-2"></i>拥抱
+                    </button>
+                    <button onclick="performComfort('kiss')" class="w-full bg-pink-500 text-white py-3 px-4 rounded-lg font-medium">
+                        <i class="fas fa-kiss mr-2"></i>亲吻
+                    </button>
+                </div>
+            `);
+        }
+
+        // 显示净化选项
+        function showPurifyOptions() {
+            showModal('净化选择', `
+                <div class="space-y-3">
+                    <button onclick="startJudgmentGame('purify_hug')" class="w-full bg-purple-500 text-white py-3 px-4 rounded-lg font-medium">
+                        <i class="fas fa-heart mr-2"></i>拥抱
+                    </button>
+                    <button onclick="startJudgmentGame('purify_intimate')" class="w-full bg-red-500 text-white py-3 px-4 rounded-lg font-medium">
+                        <i class="fas fa-fire mr-2"></i>亲密
+                    </button>
+                </div>
+            `);
+        }
+
+        // 执行安抚动作
+        function performComfort(action) {
+            let message = '';
+            let comfortIncrease = 0;
+            let lossControlDecrease = 0;
+            
+            switch(action) {
+                case 'pat':
+                    message = '你摸了摸他的头，提升5%的舒服度和减少5%的失控值';
+                    comfortIncrease = 5;
+                    lossControlDecrease = 5;
+                    break;
+                case 'hug':
+                    message = '你抱住了他，提升10%的舒服度和减少8%的失控值';
+                    comfortIncrease = 10;
+                    lossControlDecrease = 8;
+                    break;
+                case 'kiss':
+                    message = '你亲吻了他，提升20%的舒服度和减少10%的失控值';
+                    comfortIncrease = 20;
+                    lossControlDecrease = 10;
+                    break;
+            }
+            
+            gameState.counselingData.comfort = Math.min(100, gameState.counselingData.comfort + comfortIncrease);
+            gameState.counselingData.lossControl = Math.max(0, gameState.counselingData.lossControl - lossControlDecrease);
+            
+            gameState.messageLog.push(message);
+            updateProgressBars();
+            updateMessageLog();
+            hideModal();
+        }
+
+        // 开始判定游戏
+        function startJudgmentGame(action) {
+            gameState.currentAction = action;
+            hideModal();
+            
+            // 根据角色类型设置成功区域大小
+            let successZoneWidth = 25; // 默认犬系25%
+            if (gameState.currentCharacter.type === 'cat') {
+                successZoneWidth = 20; // 猫系20%
+            } else if (gameState.currentCharacter.type === 'mouse') {
+                successZoneWidth = 15; // 鼠系15%
+            }
+            
+            // 设置成功区域位置（居中）
+            const successZone = document.getElementById('successZone');
+            const leftMargin = (100 - successZoneWidth) / 2;
+            successZone.style.width = `${successZoneWidth}%`;
+            successZone.style.left = `${leftMargin}%`;
+            
+            document.getElementById('gameModal').classList.remove('hidden');
+            
+            // 初始化三角形位置和移动参数
+            gameState.trianglePosition = 0;
+            gameState.triangleDirection = 1;
+            gameState.triangleSpeed = 1.5 + Math.random() * 2; // 随机速度1.5-3.5
+            
+            // 开始三角形移动动画
+            gameState.gameInterval = setInterval(() => {
+                gameState.trianglePosition += gameState.triangleDirection * gameState.triangleSpeed;
+                
+                // 边界反弹
+                if (gameState.trianglePosition <= 0) {
+                    gameState.trianglePosition = 0;
+                    gameState.triangleDirection = 1;
+                    // 每次反弹时随机改变速度
+                    gameState.triangleSpeed = 1.5 + Math.random() * 2;
+                } else if (gameState.trianglePosition >= 100) {
+                    gameState.trianglePosition = 100;
+                    gameState.triangleDirection = -1;
+                    // 每次反弹时随机改变速度
+                    gameState.triangleSpeed = 1.5 + Math.random() * 2;
+                }
+                
+                document.getElementById('gameTriangle').style.left = `${gameState.trianglePosition}%`;
+            }, 50);
+        }
+
+        // 执行判定
+        function performJudgment() {
+            clearInterval(gameState.gameInterval);
+            
+            // 获取成功区域的范围
+            let successZoneWidth = 25; // 默认犬系25%
+            if (gameState.currentCharacter.type === 'cat') {
+                successZoneWidth = 20; // 猫系20%
+            } else if (gameState.currentCharacter.type === 'mouse') {
+                successZoneWidth = 15; // 鼠系15%
+            }
+            
+            const leftBound = (100 - successZoneWidth) / 2;
+            const rightBound = leftBound + successZoneWidth;
+            
+            // 判断是否在成功区域内
+            const isSuccess = gameState.trianglePosition >= leftBound && gameState.trianglePosition <= rightBound;
+            
+            let message = '';
+            let comfortChange = 0;
+            let lossControlChange = 0;
+            
+            if (gameState.currentAction === 'purify_hug') {
+                if (isSuccess) {
+                    message = '你紧紧抱住了他，提升10%的舒服度和减少5%的失控值';
+                    comfortChange = 10;
+                    lossControlChange = -5;
+                } else {
+                    message = '他冒出汗，增加20%的失控值';
+                    lossControlChange = 20;
+                }
+            } else if (gameState.currentAction === 'purify_intimate') {
+                if (isSuccess) {
+                    message = '你和他贴贴，提升20%的舒服度和减少15%的失控值';
+                    comfortChange = 20;
+                    lossControlChange = -15;
+                } else {
+                    message = '他感觉到失控，增加40%的失控值';
+                    lossControlChange = 40;
+                }
+            }
+            
+            gameState.counselingData.comfort = Math.min(100, Math.max(0, gameState.counselingData.comfort + comfortChange));
+            gameState.counselingData.lossControl = Math.min(100, Math.max(0, gameState.counselingData.lossControl + lossControlChange));
+            
+            gameState.messageLog.push(message);
+            updateProgressBars();
+            updateMessageLog();
+            
+            document.getElementById('gameModal').classList.add('hidden');
+        }
+
+        // 结束疏导
+        function endCounseling() {
+            gameState.messageLog.push('你认为不能完成疏导，结束了今天的工作。');
+            updateMessageLog();
+            
+            setTimeout(() => {
+                showScreen('screen3');
+            }, 3000);
+        }
+
+        // 显示模态框
+        function showModal(title, content) {
+            document.getElementById('modalContent').innerHTML = `
+                <h3 class="text-lg font-semibold mb-4">${title}</h3>
+                ${content}
+                <button onclick="hideModal()" class="mt-4 w-full bg-gray-500 text-white py-2 px-4 rounded-lg">
+                    取消
+                </button>
+            `;
+            document.getElementById('modal').classList.remove('hidden');
+        }
+
+        // 隐藏模态框
+        function hideModal() {
+            document.getElementById('modal').classList.add('hidden');
+        }
+
+        // 初始化应用
+        function init() {
+            updateDate();
+            generateCharacterCards();
+        }
+        
+        // 页面加载完成后立即初始化
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', function() {
+                showScreen('screen1');
+                init();
+            });
+        } else {
+            showScreen('screen1');
+            init();
+        }
+    </script>
+</body>
+</html>
