@@ -1,3 +1,132 @@
+# 关于pwd和cd
+
+* “Present Working Directory” 指的是你**当前所在的文件夹路径**。
+* 当你打开终端（Terminal）时，你其实“站在”某个文件夹里执行命令，这个位置就是你的“当前工作目录”。
+
+📍举例：
+
+```bash
+/home/student/projects
+```
+
+如果你当前的目录是这样，那么你运行的所有命令（如创建文件、运行程序）默认都会在这个目录下执行。
+
+---
+
+### 💻 2. Use the `pwd` command to display your working directory
+
+**使用 `pwd` 命令显示当前所在目录**
+
+* 含义：告诉你当前所在的位置（Present Working Directory）。
+
+📘 `pwd` 是 “**print working directory**” 的缩写。
+
+---
+
+### 🧭 3. Use `cd` to navigate to different directories
+
+**使用 `cd` 命令在不同目录间切换**
+
+* `cd` 是 “change directory” 的缩写。
+
+* 用法：
+
+  ```bash
+  cd Documents
+  ```
+
+  表示进入当前目录下的 `Documents` 文件夹。
+
+* 其他常见用法：
+
+  ```bash
+  cd ~        # 回到用户主目录
+  cd ..       # 返回上一级目录
+  cd /        # 到系统根目录
+  cd /path/to/folder  # 直接进入指定路径
+  ```
+
+---
+
+### 📂 4. Use `ls` to list directories
+
+**使用 `ls` 命令列出当前目录下的文件和文件夹**
+
+* 命令：
+
+  ```bash
+  ls
+  ```
+
+* 输出示例：
+
+  ```
+  Desktop  Documents  Downloads  Pictures
+  ```
+
+  表示当前目录中有这些子文件夹。
+
+* 常见选项：
+
+  ```bash
+  ls -l   # 以详细列表形式显示（包含权限、大小、日期等）
+  ls -a   # 显示隐藏文件（以 . 开头的）
+  ```
+
+---
+
+### ✅ 总结表
+
+| 命令    | 含义       | 示例输出                  |
+| ----- | -------- | --------------------- |
+| `pwd` | 显示当前目录路径 | `/home/user/Desktop`  |
+| `cd`  | 切换目录     | `cd Documents`        |
+| `ls`  | 列出文件/目录  | `file1.txt  folderA/` |
+
+
+
+## 🧠 三、理解路径的逻辑（重要概念）
+
+| 类型   | 示例                   | 说明                           |
+| ---- | -------------------- | ---------------------------- |
+| 绝对路径 | `/home/user/Desktop` | 从根目录 `/` 开始写的完整路径            |
+| 相对路径 | `../Downloads`       | 相对当前目录的路径（`..` 表示上一级）        |
+| 当前目录 | `.`                  | 代表当前所在目录                     |
+| 主目录  | `~`                  | 代表你的 home 目录（如 `/home/user`） |
+
+---
+
+## 📘 四、练习目标总结
+
+| 目标      | 对应命令    |
+| ------- | ------- |
+| 了解当前路径  | `pwd`   |
+| 列出当前内容  | `ls`    |
+| 切换到其他目录 | `cd`    |
+| 回到上一级   | `cd ..` |
+| 回到主目录   | `cd ~`  |
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 在使用 **Pixi（或其他项目环境，比如 Python、Node、Git 等）** 时，你常常会看到说明里写类似这样的步骤：
 
 ```bash
