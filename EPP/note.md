@@ -129,31 +129,12 @@
 
 在使用 **Pixi（或其他项目环境，比如 Python、Node、Git 等）** 时，你常常会看到说明里写类似这样的步骤：
 
-```bash
-git clone https://github.com/username/project-name.git
-cd project-name
-pixi run start
-```
+clone
+在合适的文件夹输入
+<img width="1654" height="380" alt="image" src="https://github.com/user-attachments/assets/2d9b3a23-a153-460b-aba5-bfd4804e03ed" />
+就会自动在此文件夹位置下载克隆的文件夹
+<img width="1388" height="476" alt="image" src="https://github.com/user-attachments/assets/965d4cd2-de1e-47bf-83fa-c3bd8914cfc8" />
 
-这里的 **“clone”** 和 **“navigate”** 是两个关键动作
-
-**Clone（克隆）** 指的是从远程仓库（例如 GitHub）下载一份完整的项目副本到你的电脑上。
-
-命令：
-
-```bash
-git clone https://github.com/username/project-name.git
-```
-
-意思是：
-
-> 从这个网址下载项目代码，复制到你本地的一个新文件夹 `project-name/` 中。
-
-执行后，你的电脑上会出现一个文件夹，比如：
-
-```
-D:\Projects\project-name\
-```
 
 **Navigate（导航/切换目录）** 是指进入刚刚克隆下来的项目文件夹。
 
