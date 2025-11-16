@@ -25,22 +25,6 @@
 
 **使用 `ls` 命令列出当前目录下的文件和文件夹**
 
-
-
-| 命令    | 含义       | 示例输出                  |
-| ----- | -------- | --------------------- |
-| `pwd` | 显示当前目录路径 | `/home/user/Desktop`  |
-| `cd`  | 切换目录     | `cd Documents`        |
-| `ls`  | 列出文件/目录  | `file1.txt  folderA/` |
-
-
-| 类型   | 示例                   | 说明                           |
-| ---- | -------------------- | ---------------------------- |
-| 绝对路径 | `/home/user/Desktop` | 从根目录 `/` 开始写的完整路径            |
-| 相对路径 | `../Downloads`       | 相对当前目录的路径（`..` 表示上一级）        |
-| 当前目录 | `.`                  | 代表当前所在目录                     |
-| 主目录  | `~`                  | 代表你的 home 目录（如 `/home/user`） |
-
 -
 
 
@@ -63,62 +47,14 @@
 
 
 
-在使用 **Pixi（或其他项目环境，比如 Python、Node、Git 等）** 时，你常常会看到说明里写类似这样的步骤：
+pixi
 
 pixi init
 pixi shell #进入pixi环境
 
-
-
-**Navigate（导航/切换目录）** 是指进入刚刚克隆下来的项目文件夹。
-
-命令：
-
-```bash
-cd project-name
-```
-
-意思是：
-
-> 进入你刚刚下载的项目目录。
-
-你可以用 `pwd`（在 PowerShell 或 macOS/Linux 里）查看你现在所在的路径。
-
 ---
 
-### ⚙️ 3️⃣ 然后再运行 Pixi 命令
 
-当你在正确的项目目录下时（就是包含 `pixi.toml` 或 `.pixi` 文件的地方），你才能运行：
-
-```bash
-pixi run start
-```
-
-或者其他命令（比如 `pixi shell`、`pixi install` 等）。
-
----
-
-### ✅ 总结一下：
-
-| 动作      | 英文命令                   | 含义        |
-| ------- | ---------------------- | --------- |
-| 克隆项目    | `git clone <repo_url>` | 下载项目到本地   |
-| 切换目录    | `cd <folder_name>`     | 进入项目文件夹   |
-| 运行 Pixi | `pixi run <command>`   | 在该环境中执行命令 |
-
----
-
-📌 举个具体例子：
-
-```bash
-git clone https://github.com/prefix-dev/pixi-examples.git
-cd pixi-examples/getting-started
-pixi run python main.py
-```
-
-* 第一步：下载 `pixi-examples` 项目。
-* 第二步：进入其中的 `getting-started` 文件夹。
-* 第三步：在 Pixi 环境下运行 Python 程序。
 
 关于if 
 “These conditions are necessarily exhaustive.”
@@ -171,10 +107,7 @@ else:
 但在 `if/elif/else` 结构中，**只会执行一个分支**，不会多个同时执行。
 
 
-关于git push流程
-非常好 👍
-这是日常开发/作业提交里最常用、最标准的一套 Git 流程。
-我帮你总结成了**一步步清晰操作指南**，你照着打命令就行👇
+
 
 ---
 
@@ -195,8 +128,6 @@ git push origin main            # 推送到远端仓库
 ```
 
 ---
-
-## 🧩 二、详细步骤解释
 
 ### 1️⃣ 修改文件后查看状态
 
@@ -223,12 +154,6 @@ git add .
 ```bash
 git commit -m "fix: corrected function name in tools.py"
 ```
-
-💡 提交信息要简短清晰，例如：
-
-* `"fix: correct import path"`
-* `"update: add bias explanation"`
-* `"feat: new function for markdown conversion"`
 
 ---
 
@@ -287,9 +212,44 @@ CONFLICT (content): Merge conflict in tools_evaluations.py
 ```bash
 git log --oneline -5
 ```
+---
+如果是非pixi环境（kernel）运行jupytor notebook
+<img width="1202" height="160" alt="image" src="https://github.com/user-attachments/assets/119b571a-2d80-4f1f-9f53-4be23f480381" />
+例如这里我选择python 3.10.0
+不能直接现在用pip Install 去下载例如pandas
+可能会装错环境
+   ```
+Requirement already satisfied: tzdata==2022.1 in
+c:\users\刘心怡\appdata\local\programs\python\python38\lib\site-packages
+...
+Requirement already satisfied: pandas (2023.x)
 
-查看最近 5 次提交；
-然后去 GitHub 网页刷新仓库页面，确认最新提交已经更新。
+   ```
+pip 把 pandas 装到了这个路径的 Python 里：
+但你 notebook 里的 kernel 不是用的这个 Python，而是别的
+应该：保证安装 pandas 的 Python”和“运行 notebook 的 Python”是同一个
+1.在 notebook 里查清楚“自己现在用的是哪个 Python”
+```bash
+import sys
+print(sys.executable)
+print(sys.version)
 
-
+```
+输出的路径就是当前 kernel 用的 Python
+2. 终端里对这个Python安装pandas
+(注意powershell语法)
+```
+& "D:\Wizards98\Python\python.exe" -m pip install --upgrade pip
+& "D:\Wizards98\Python\python.exe" -m pip install pandas
+```
+（或者因为路径中没有空格，不用外面的引号）
+```
+D:\Wizards98\Python\python.exe -m pip install --upgrade pip
+D:\Wizards98\Python\python.exe -m pip install pandas
+```
+再回到notebook
+```
+import pandas as pd
+pd.__version__
+```
 
