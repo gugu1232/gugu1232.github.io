@@ -253,3 +253,7 @@ import pandas as pd
 pd.__version__
 ```
 
+---
+*** numpy
+np.array
+https://numpy.org/doc/stable/reference/routines.array-creation.html
